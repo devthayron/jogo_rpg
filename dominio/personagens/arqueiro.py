@@ -1,21 +1,17 @@
 from dominio.personagens.personagem import Personagem
-from dominio.habilidades.resultado_ataque import ResultadoAtaque
-from dominio.habilidades.tipo_ataque import TipoAtaque
-import random 
+from dominio.habilidades.base import AtaqueBasico
+from dominio.habilidades.arqueiro.disparo_triplo import DisparoTriplo
+from dominio.enums.tipo_habilidade import TipoHabilidade
 
 class Arqueiro(Personagem):
-    
     def __init__(self, nome, vida, dano):
         super().__init__(nome, vida, dano)
+        # Registra as habilidades do Arqueiro
+        self.habilidades = [
+            AtaqueBasico(self),   # Ataque básico universal
+            DisparoTriplo(self)    # Habilidade especial do Arqueiro
+        ]
 
-    def atacar(self, alvo, custo = 20, dano_especial = None):
-        return super().atacar(alvo, custo, dano_especial)
-
-    def ataque_especial(self,alvo: Personagem):
-        super().ataque_especial(alvo)
-        dano_triplo = 0
-        for _ in range(3):
-            dano = self.dano // 2 if random.random() <= 0.5 else self.dano
-            dano_triplo += dano
-        resultado = self.atacar(alvo , custo=45 , dano_especial=dano_triplo, tipo=TipoAtaque.DANO_TRIPLO)
-        return resultado
+    def ataque_especial(self, alvo: Personagem):
+        """Executa a habilidade especial do Arqueiro"""
+        return self.usar_habilidade(alvo, TipoHabilidade.DISPARO_TRIPLO)

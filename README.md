@@ -1,49 +1,64 @@
-#  Sistema de Combate em Python (POO)
+# Sistema de Combate em Python (POO)
 
 Sistema de combate em Python orientado a objetos, evoluindo gradualmente como base para um RPG com IA.
 
-##  Objetivo do projeto
+## Objetivo do projeto
 
 Criar uma base sólida de RPG em Python utilizando Programação Orientada a Objetos, com foco em modularidade, escalabilidade e organização de código.  
 
-O projeto evoluirá gradualmente de um sistema de combate simples para um RPG completo expandindo para mecânicas mais complexas
+O projeto evoluiu para ter uma **base de habilidades centralizada**, permitindo que cada personagem tenha ataques próprios, incluindo ataque básico herdado por todos.  
 
 ---
 
-##  Conceitos aplicados
+## Conceitos aplicados
 
 * Programação Orientada a Objetos
 * Herança e polimorfismo
 * Encapsulamento de atributos
 * Organização modular do código
 * Separação de responsabilidades
+* Validação centralizada de ataques e falhas
 
 ---
 
-##  Funcionalidades 
+## Funcionalidades 
 
-* Separação clara de responsabilidades  
+* Separação clara de responsabilidades: Personagem vs Habilidade  
 * Estrutura modular inicial para simulação de combate
-* Código preparado para escalar 
-* Base estruturada para futuras integrações com IA  
+* Código preparado para escalar e adicionar novas habilidades
+* Base estruturada para futuras integrações com IA
+* Sistema de falhas centralizado usando enums (`MotivoFalha`)  
 
 ---
 
 ## 📁 Estrutura do projeto
 
+
 ```
-main.py     -> inicia e executa o sistema
+main.py -> inicia e executa o sistema
 
-dominio/    -> Regras centrais e entidades do jogo
+dominio/ -> Regras centrais e entidades do jogo
 ├─ personagens/
+│ ├─ personagem.py
+│ ├─ guerreiro.py
+│ └─ arqueiro.py
 ├─ habilidades/
+│ ├─ habilidade.py -> base de habilidades
+│ ├─ ataque_basico.py
+│ ├─ golpe_pesado.py
+│ └─ disparo_triplo.py
+├─ resultados/
+│ └─ resultado_ataque.py
+└─ enums/
+├─ tipo_habilidade.py
+└─ motivo_falha.py
 
-sistema/    -> Orquestra o funcionamento do combate.
+sistema/ -> Orquestra o funcionamento do combate
 ├─ acoes.py
 ├─ executor.py
 └─ batalha.py
 
-interface/  -> Camada de interação com o usuário
+interface/ -> Camada de interação com o usuário
 └─ terminal/
 ```
 
