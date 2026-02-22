@@ -5,12 +5,15 @@ from dominio.enums.tipo_habilidade import TipoHabilidade
 
 class Guerreiro(Personagem):
     def __init__(self, nome, vida, dano):
-        super().__init__(nome, vida, dano)
-        # Registra as habilidades do Guerreiro
-        self.habilidades = [
-            AtaqueBasico(self),  # Ataque básico universal
-            GolpePesado(self)    # Habilidade especial do Guerreiro
+        # Cria lista de habilidades dinamicamente
+        habilidades = [
+            AtaqueBasico(None),  # Ataque universal
+            GolpePesado(None)    # Habilidade especial do Guerreiro
         ]
+        super().__init__(nome, vida, dano, habilidades=habilidades)
+        # Conecta as habilidades ao personagem
+        for hab in self.habilidades:
+            hab.registrar_dono(self)
 
     def ataque_especial(self, alvo: Personagem):
         """Executa a habilidade especial do Guerreiro"""
