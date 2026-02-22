@@ -2,8 +2,9 @@ from dominio.resultados.resultado_ataque import ResultadoAtaque
 from dominio.enums.tipo_habilidade import TipoHabilidade
 from dominio.enums.motivo_falha import MotivoFalha
 from dominio.personagens.personagem import Personagem
+from abc import ABC,abstractmethod
 
-class Habilidade:
+class Habilidade(ABC):
     """Classe base para todas as habilidades"""
 
     def __init__(self, personagem):
@@ -11,7 +12,6 @@ class Habilidade:
         self.tipo = TipoHabilidade.ATAQUE_BASICO
         self.custo = 20  # padrão, subclasses podem sobrescrever
 
-    # ----------------- Validação centralizada -----------------
     def validar(self, alvo):
         """Valida se a habilidade pode ser executada"""
         if not isinstance(alvo, Personagem):
@@ -24,7 +24,6 @@ class Habilidade:
             return False, MotivoFalha.SEM_ENERGIA
         return True, None
 
-    # ----------------- Executar -----------------
     def executar(self, alvo):
         """Executa a habilidade"""
         valido, motivo = self.validar(alvo)
@@ -36,15 +35,17 @@ class Habilidade:
             )
         return self._executar_ataque(alvo)
 
-    # ----------------- Método abstrato para cálculo do dano -----------------
-    def _executar_ataque(self, alvo):
-        raise NotImplementedError("_executar_ataque deve ser implementado na subclasse")
-
+    # ----------------- Método abstrato -----------------
+    @abstractmethod
+    def _executar_ataque(self, alvo): 
+        """Subclasses devem implementar a lógica do ataque"""
+        pass
 
 # ----------------- Ataque Básico -----------------
 class AtaqueBasico(Habilidade):
     """Todos os personagens possuem ataque básico"""
-    def __init__(self, personagem):
+    
+    def __init__(self, personagem) -> ResultadoAtaque:
         super().__init__(personagem)
         self.tipo = TipoHabilidade.ATAQUE_BASICO
         self.custo = 20  # custo padrão de energia
