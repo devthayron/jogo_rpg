@@ -6,7 +6,7 @@ Sistema de combate em Python orientado a objetos, evoluindo gradualmente como ba
 
 Criar uma base sólida de RPG em Python utilizando Programação Orientada a Objetos, com foco em modularidade, escalabilidade e organização de código.  
 
-O projeto evoluiu para ter uma **base de habilidades centralizada**, permitindo que cada personagem tenha ataques próprios, incluindo ataque básico herdado por todos.  
+O projeto evoluiu para ter uma **base de habilidades centralizada**, permitindo que cada personagem tenha ataques próprios, incluindo ataque básico herdado por todos via decorator e fábrica de habilidades.
 
 ---
 
@@ -18,12 +18,15 @@ O projeto evoluiu para ter uma **base de habilidades centralizada**, permitindo 
 * Organização modular do código
 * Separação de responsabilidades
 * Validação centralizada de ataques e falhas
+* via decorator e fábrica de habilidades
 
 ---
 
 ## Funcionalidades 
 
 * Separação clara de responsabilidades: Personagem vs Habilidade  
+* Decorator @registrar_habilidade_para registra habilidades para uma ou todas as classes
+* Fábrica de personagens adiciona habilidades automaticamente
 * Estrutura modular inicial para simulação de combate
 * Código preparado para escalar e adicionar novas habilidades
 * Base estruturada para futuras integrações com IA
@@ -39,19 +42,23 @@ main.py -> inicia e executa o sistema
 
 dominio/ -> Regras centrais e entidades do jogo
 ├─ personagens/
-│ ├─ personagem.py
-│ ├─ guerreiro.py
-│ └─ arqueiro.py
+│  ├─ personagem.py
+│  ├─ guerreiro.py
+│  └─ arqueiro.py
 ├─ habilidades/
-│ ├─ habilidade.py -> base de habilidades
-│ ├─ ataque_basico.py
-│ ├─ golpe_pesado.py
-│ └─ disparo_triplo.py
+│  ├─ base.py -> classe base Habilidade
+│  ├─ decorator.py -> registra habilidades automaticamente
+│  ├─ guerreiro/
+│  │  └─ golpe_pesado.py
+│  ├─ arqueiro/
+│  │  └─ disparo_triplo.py
+│  └─ ataque_basico.py
 ├─ resultados/
-│ └─ resultado_ataque.py
+│  └─ resultado_ataque.py
 └─ enums/
-├─ tipo_habilidade.py
-└─ motivo_falha.py
+   ├─ classe_personagem.py
+   ├─ tipo_habilidade.py
+   └─ motivo_falha.py
 
 sistema/ -> Orquestra o funcionamento do combate
 ├─ acoes.py
@@ -77,12 +84,10 @@ python main.py
 
 ## Próximos passos do projeto
 
-* Implementar a camada de sistema (`acoes.py`, `executor.py`, `batalha.py`) 
-* `batalha.py`: Criar o sistema de turnos, definindo ordem de ação e encerramento automático da batalha  
-* `executor.py`: Estruturar um executor responsável por aplicar ações e registrar seus resultados  
-* `acoes.py`: Evoluir o modelo de ações para permitir habilidades independentes do personagem  
-* Desenvolver a interface textual no terminal para interação e visualização dos resultados  
+* Expandir o sistema de combate e ações (acoes.py, executor.py, batalha.py)
 * Evoluir a interface Visual Utilizando a biblioteca `Pygame`
+* Evoluir o terminal para melhor interação com usuário e exibição de habilidades 
+* Adicionar novos tipos de personagem e habilidades facilmente via decorator
 * Preparar a arquitetura para futura implementação de IA de decisão baseada no estado da batalha  
 
 ---

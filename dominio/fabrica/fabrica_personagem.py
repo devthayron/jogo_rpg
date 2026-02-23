@@ -1,52 +1,30 @@
 from dominio.personagens.guerreiro import Guerreiro
 from dominio.personagens.arqueiro import Arqueiro
-
-from dominio.enums.classe_personagem import ClassePersonagem
-from dominio.enums.tipo_habilidade import TipoHabilidade
-
 from dominio.fabrica.fabrica_habilidade import FabricaHabilidade
-
+from dominio.enums.classe_personagem import ClassePersonagem
 
 class FabricaPersonagem:
+    """
+    Fábrica que cria personagens e adiciona automaticamente
+    todas as habilidades registradas para a classe.
+    """
+
+    CLASSES = {
+        ClassePersonagem.GUERREIRO: Guerreiro,
+        ClassePersonagem.ARQUEIRO: Arqueiro,
+    }
 
     @staticmethod
     def criar(classe: ClassePersonagem, nome: str):
-
-        if classe == ClassePersonagem.GUERREIRO:
-            personagem = Guerreiro(nome)
-
-        elif classe == ClassePersonagem.ARQUEIRO:
-            personagem = Arqueiro(nome)
-
-        else:
+        if classe not in FabricaPersonagem.CLASSES:
             raise ValueError("Classe inválida")
 
-        # 🔥 Build inicial padrão do jogo
-        FabricaPersonagem._aplicar_build_inicial(personagem)
+        # Cria a instância do personagem
+        personagem = FabricaPersonagem.CLASSES[classe](nome)
+
+        # 🔥 Adiciona todas as habilidades registradas para a classe
+        habilidades_cls = FabricaHabilidade._registro.get(classe, {}).values()
+        for hab_cls in habilidades_cls:
+            personagem.adicionar_habilidade(hab_cls(personagem))
 
         return personagem
-
-    @staticmethod
-    def _aplicar_build_inicial(personagem):
-
-        # Todo mundo recebe ataque básico
-        habilidade_basica = FabricaHabilidade.criar(
-            personagem,
-            TipoHabilidade.ATAQUE_BASICO
-        )
-        personagem.adicionar_habilidade(habilidade_basica)
-
-        # Especial depende da classe
-        if personagem.classe == ClassePersonagem.GUERREIRO:
-            especial = FabricaHabilidade.criar(
-                personagem,
-                TipoHabilidade.GOLPE_PESADO
-            )
-
-        elif personagem.classe == ClassePersonagem.ARQUEIRO:
-            especial = FabricaHabilidade.criar(
-                personagem,
-                TipoHabilidade.DISPARO_TRIPLO
-            )
-
-        personagem.adicionar_habilidade(especial)

@@ -96,8 +96,7 @@ class Personagem(ABC):
                 tipo=tipo
             )
 
-        # 🔥 CORREÇÃO AQUI:
-        # Não passamos self, pois a habilidade já conhece o personagem
+
         return habilidade.executar(alvo)
 
     def listar_habilidades(self) -> List[str]:

@@ -1,8 +1,10 @@
 from dominio.habilidades.base import Habilidade
 from dominio.resultados.resultado_ataque import ResultadoAtaque
 from dominio.enums.tipo_habilidade import TipoHabilidade
+from dominio.habilidades.decorator import registrar_habilidade_para
+from dominio.enums.classe_personagem import ClassePersonagem
 
-
+@registrar_habilidade_para(ClassePersonagem.GUERREIRO)
 class GolpePesado(Habilidade):
 
     def __init__(self, personagem):

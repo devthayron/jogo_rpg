@@ -3,9 +3,7 @@ from sistema.executor import Executor
 from sistema.acoes import Acao
 import random
 
-
 class Batalha:
-
     def __init__(self, jogador: Personagem, inimigo: Personagem):
         self.jogador = jogador
         self.inimigo = inimigo
@@ -25,9 +23,7 @@ class Batalha:
         }
 
     def executar_turno(self, acao_jogador, tipo_habilidade=None):
-
         # ---------------- Jogador ----------------
-
         resultado_jogador = Executor.executar(
             atacante=self.jogador,
             alvo=self.inimigo,
@@ -36,16 +32,11 @@ class Batalha:
         )
 
         # ---------------- Inimigo ----------------
-
         resultado_inimigo = None
-
         if self.inimigo.esta_vivo():
-
             habilidades = self.inimigo.habilidades_disponiveis()
-
             if habilidades:
                 habilidade_escolhida = random.choice(habilidades)
-
                 resultado_inimigo = Executor.executar(
                     atacante=self.inimigo,
                     alvo=self.jogador,
@@ -54,7 +45,5 @@ class Batalha:
                 )
 
         # ---------------- Próximo turno ----------------
-
         self.turno += 1
-
         return resultado_jogador, resultado_inimigo

@@ -1,42 +1,21 @@
-from dominio.enums.tipo_habilidade import TipoHabilidade
 from dominio.enums.classe_personagem import ClassePersonagem
 
-from dominio.habilidades.base import AtaqueBasico
-from dominio.habilidades.guerreiro import GolpePesado
-from dominio.habilidades.arqueiro import DisparoTriplo
-
-
 class FabricaHabilidade:
+    _registro = {}  # {ClassePersonagem: {nome_habilidade: ClasseHabilidade}}
 
-    # 🔥 Regras centrais do jogo
-    HABILIDADES_PERMITIDAS = {
-        ClassePersonagem.GUERREIRO: {
-            TipoHabilidade.ATAQUE_BASICO,
-            TipoHabilidade.GOLPE_PESADO,
-        },
-        ClassePersonagem.ARQUEIRO: {
-            TipoHabilidade.ATAQUE_BASICO,
-            TipoHabilidade.DISPARO_TRIPLO,
-        },
-    }
+    @classmethod
+    def registrar(cls, personagem_classe: ClassePersonagem, habilidade_cls):
+        if personagem_classe not in cls._registro:
+            cls._registro[personagem_classe] = {}
+        cls._registro[personagem_classe][habilidade_cls.__name__] = habilidade_cls
+        print(f"[FabricaHabilidade] Registrado {habilidade_cls.__name__} para {personagem_classe.value}")
 
-    @staticmethod
-    def criar(personagem, tipo: TipoHabilidade):
-
-        classe = personagem.classe
-
-        if tipo not in FabricaHabilidade.HABILIDADES_PERMITIDAS[classe]:
-            raise ValueError(
-                f"{tipo.name} não permitido para {classe.value}"
-            )
-
-        if tipo == TipoHabilidade.ATAQUE_BASICO:
-            return AtaqueBasico(personagem)
-
-        if tipo == TipoHabilidade.GOLPE_PESADO:
-            return GolpePesado(personagem)
-
-        if tipo == TipoHabilidade.DISPARO_TRIPLO:
-            return DisparoTriplo(personagem)
-
-        raise ValueError("Habilidade não implementada")
+    @classmethod
+    def criar(cls, personagem, nome_habilidade: str):
+        personagem_classe = personagem.classe
+        if personagem_classe not in cls._registro:
+            raise ValueError(f"Nenhuma habilidade registrada para {personagem_classe.value}")
+        habilidade_cls = cls._registro[personagem_classe].get(nome_habilidade)
+        if not habilidade_cls:
+            raise ValueError(f"Habilidade {nome_habilidade} não registrada para {personagem_classe.value}")
+        return habilidade_cls(personagem)
