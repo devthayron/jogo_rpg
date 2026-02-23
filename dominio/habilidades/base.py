@@ -1,59 +1,65 @@
+from abc import ABC, abstractmethod
+
 from dominio.resultados.resultado_ataque import ResultadoAtaque
 from dominio.enums.tipo_habilidade import TipoHabilidade
 from dominio.enums.motivo_falha import MotivoFalha
 from dominio.personagens.personagem import Personagem
-from abc import ABC,abstractmethod
+
 
 class Habilidade(ABC):
-    """Classe base para todas as habilidades"""
 
-    def __init__(self, personagem):
+    def __init__(self, personagem: Personagem):
         self.personagem = personagem
-        self.tipo = TipoHabilidade.ATAQUE_BASICO
-        self.custo = 20  # padrão, subclasses podem sobrescrever
+        self.tipo = None
+        self.custo = 0
 
-    def validar(self, alvo):
-        """Valida se a habilidade pode ser executada"""
+    def validar(self, alvo: Personagem):
         if not isinstance(alvo, Personagem):
             return False, MotivoFalha.ALVO_INVALIDO
+
         if not self.personagem.esta_vivo():
             return False, MotivoFalha.ATACANTE_MORTO
+
         if not alvo.esta_vivo():
             return False, MotivoFalha.ALVO_MORTO
+
         if self.personagem.energia < self.custo:
             return False, MotivoFalha.SEM_ENERGIA
+
         return True, None
 
-    def executar(self, alvo):
-        """Executa a habilidade"""
+    def executar(self, alvo: Personagem):
         valido, motivo = self.validar(alvo)
+
         if not valido:
             return ResultadoAtaque(
                 executado=False,
                 motivo_falha=motivo,
                 tipo=self.tipo
             )
-        return self._executar_ataque(alvo)
 
-    # ----------------- Método abstrato -----------------
+        return self._executar(alvo)
+
     @abstractmethod
-    def _executar_ataque(self, alvo): 
-        """Subclasses devem implementar a lógica do ataque"""
+    def _executar(self, alvo: Personagem) -> ResultadoAtaque:
         pass
 
-# ----------------- Ataque Básico -----------------
+
+# ---------------- ATAQUE BASICO ----------------
+
 class AtaqueBasico(Habilidade):
-    """Todos os personagens possuem ataque básico"""
-    
-    def __init__(self, personagem) -> ResultadoAtaque:
+
+    def __init__(self, personagem: Personagem):
         super().__init__(personagem)
         self.tipo = TipoHabilidade.ATAQUE_BASICO
-        self.custo = 20  # custo padrão de energia
+        self.custo = 20
 
-    def _executar_ataque(self, alvo):
+    def _executar(self, alvo: Personagem):
         self.personagem.gastar_energia(self.custo)
+
         dano_final = self.personagem.dano
         alvo.receber_dano(dano_final)
+
         return ResultadoAtaque(
             executado=True,
             dano=dano_final,

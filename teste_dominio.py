@@ -1,58 +1,37 @@
 from dominio.personagens.guerreiro import Guerreiro
 from dominio.personagens.arqueiro import Arqueiro
-from dominio.habilidades.base import AtaqueBasico
-from dominio.habilidades.guerreiro.golpe_pesado import GolpePesado
-from dominio.habilidades.arqueiro.disparo_triplo import DisparoTriplo
+from dominio.enums.tipo_habilidade import TipoHabilidade
+
+def mostrar_status(msg, personagem1, personagem2, resultado=None):
+    if resultado:
+        print(msg, resultado.__dict__)
+    else:
+        print(msg)
+    print(personagem1)
+    print(personagem2)
+    print('---'*45)
 
 def main():
-    # Criar personagens
     guerreiro = Guerreiro("Conan", vida=100, dano=15)
     arqueiro = Arqueiro("Legolas", vida=80, dano=12)
 
-    # Adicionar habilidades
-    ataque_basico_guerreiro = AtaqueBasico(guerreiro)
-    golpe_pesado = GolpePesado(guerreiro)
-    
-    ataque_basico_arqueiro = AtaqueBasico(arqueiro)
-    disparo_triplo = DisparoTriplo(arqueiro)
+    mostrar_status("Status inicial:", guerreiro, arqueiro)
 
-    # Mostrar status inicial
-    print(guerreiro)
-    print(arqueiro)
-    print("---")
+    resultado = guerreiro.usar_habilidade(arqueiro, TipoHabilidade.ATAQUE_BASICO)
+    mostrar_status("Ataque Básico Guerreiro:", guerreiro, arqueiro, resultado)
 
-    # Teste 1: ataque básico do guerreiro no arqueiro
-    resultado = ataque_basico_guerreiro.executar(arqueiro)
-    print("Ataque Básico Guerreiro:", resultado.__dict__)
-    print(guerreiro)
-    print(arqueiro)
-    print("---")
+    resultado = guerreiro.ataque_especial(arqueiro)
+    mostrar_status("Golpe Pesado Guerreiro:", guerreiro, arqueiro, resultado)
 
-    # Teste 2: golpe pesado do guerreiro no arqueiro
-    resultado = golpe_pesado.executar(arqueiro)
-    print("Golpe Pesado Guerreiro:", resultado.__dict__)
-    print(guerreiro)
-    print(arqueiro)
-    print("---")
+    resultado = arqueiro.usar_habilidade(guerreiro, TipoHabilidade.ATAQUE_BASICO)
+    mostrar_status("Ataque Básico Arqueiro:", guerreiro, arqueiro, resultado)
 
-    # Teste 3: ataque básico do arqueiro no guerreiro
-    resultado = ataque_basico_arqueiro.executar(guerreiro)
-    print("Ataque Básico Arqueiro:", resultado.__dict__)
-    print(guerreiro)
-    print(arqueiro)
-    print("---")
+    resultado = arqueiro.ataque_especial(guerreiro)
+    mostrar_status("Disparo Triplo Arqueiro:", guerreiro, arqueiro, resultado)
 
-    # Teste 4: disparo triplo do arqueiro no guerreiro
-    resultado = disparo_triplo.executar(guerreiro)
-    print("Disparo Triplo Arqueiro:", resultado.__dict__)
-    print(guerreiro)
-    print(arqueiro)
-    print("---")
-
-    # Teste 5: testar falha de energia
     arqueiro._energia = 0
-    resultado = ataque_basico_arqueiro.executar(guerreiro)
-    print("Ataque Arqueiro sem energia:", resultado.__dict__)
+    resultado = arqueiro.usar_habilidade(guerreiro, TipoHabilidade.ATAQUE_BASICO)
+    mostrar_status("Ataque Arqueiro sem energia:", guerreiro, arqueiro, resultado)
 
 if __name__ == "__main__":
     main()

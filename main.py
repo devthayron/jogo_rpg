@@ -1,16 +1,26 @@
-from dominio.personagens.guerreiro import Guerreiro
-from dominio.personagens.arqueiro import Arqueiro
+from dominio.enums.classe_personagem import ClassePersonagem
+from dominio.fabrica.fabrica_personagem import FabricaPersonagem
 
-arthur = Guerreiro("Arthur", 200, 20)
-legolas = Arqueiro("Legolas", 150, 15)
+from sistema.batalha import Batalha
+from interface.terminal.terminal import iniciar_terminal
 
-# Ataque normal
-res1 = arthur.atacar(legolas)
-print(f"{arthur.nome} atacou {legolas.nome}: {res1.dano} de dano | Tipo: {res1.tipo}")
 
-# Ataque especial
-res2 = legolas.ataque_especial(arthur)
-print(f"{legolas.nome} atacou {arthur.nome}: {res2.dano} de dano | Tipo: {res2.tipo}")
+def main():
 
-print(arthur)
-print(legolas)
+    jogador = FabricaPersonagem.criar(
+        ClassePersonagem.GUERREIRO,
+        "Heroi"
+    )
+
+    inimigo = FabricaPersonagem.criar(
+        ClassePersonagem.ARQUEIRO,
+        "Goblin"
+    )
+
+    batalha = Batalha(jogador, inimigo)
+
+    iniciar_terminal(batalha)
+
+
+if __name__ == "__main__":
+    main()
